@@ -78,7 +78,7 @@ class InputArea(tk.Frame):
         if str(responseCode)[0] in ["2", "3"]:
             self.numericallyCorrect = tk.Label(self.master.outputArea, text="Website is up and running")
         if str(responseCode)[0] in ["4", "5"]:
-            self.numericallyCorrect = tk.Label(self.master.outputArea, text="Website exists, but is either not runnning right now or doesn't have this subdomain")
+            self.numericallyCorrect = tk.Label(self.master.outputArea, text="Website exists, but is either not running right now or doesn't have this subdomain")
         elif responseCode == "Failed to connect":
             self.numericallyCorrect = tk.Label(self.master.outputArea, text="Unknown whether website works or not, could not connect to it. Check your internet connection. It's possible this website doesn't even exist.")
         elif responseCode == "Please input something":
