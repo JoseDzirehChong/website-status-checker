@@ -13,11 +13,18 @@ try:
 except ImportError:
     import Tkinter as tk
 
+#credit to novel_yet_trivial for this class
+class WrappingLabel(tk.Label):
+    '''a type of Label that automatically adjusts the wrap to the size'''
+    def __init__(self, master=None, **kwargs):
+        tk.Label.__init__(self, master, **kwargs)
+        self.bind('<Configure>', lambda e: self.config(wraplength=self.winfo_width()))
+
 class InputArea(tk.Frame):
     def __init__(self, master=None, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
         
-        self.ipPrompt = tk.Label(self, text="Enter website or IP address")
+        self.ipPrompt = WrappingLabel(self, text="Enter website or IP address")
         self.ipInput = tk.Entry(self)
         self.submitButton = tk.Button(self, text="Check Status", command=self.master.outputArea.displayValidity)
 
@@ -42,15 +49,15 @@ class InputArea(tk.Frame):
     def setValidity(self):
         responseCode = self.attempt200ResponseCode()
         if str(responseCode)[0] in ["2", "3"]:
-            self.numericallyCorrect = tk.Label(self.master.outputArea, text="Website is up and running")
+            self.numericallyCorrect = WrappingLabel(self.master.outputArea, text="Website is up and running")
         elif str(responseCode)[0] in ["4", "5"]:
-            self.numericallyCorrect = tk.Label(self.master.outputArea, text="Website exists, but is either not running right now or doesn't have this subdomain")
+            self.numericallyCorrect = WrappingLabel(self.master.outputArea, text="Website exists, but is either not running right now or doesn't have this subdomain")
         elif responseCode == "Failed to connect":
-            self.numericallyCorrect = tk.Label(self.master.outputArea, text="Unknown whether website works or not, could not connect to it. Check your internet connection. It's possible this website doesn't even exist.")
+            self.numericallyCorrect = WrappingLabel(self.master.outputArea, text="Unknown whether website works or not, could not connect to it. Check your internet connection. It's possible this website doesn't even exist.")
         elif responseCode == "Please input something":
-            self.numericallyCorrect = tk.Label(self.master.outputArea, text=responseCode)
+            self.numericallyCorrect = WrappingLabel(self.master.outputArea, text=responseCode)
         else:
-            self.numericallyCorrect = tk.Label(self.master.outputArea, text="Something's wrong. Contact me at josedzirehchong@gmail.com so I can attempt to resolve the issue.")
+            self.numericallyCorrect = WrappingLabel(self.master.outputArea, text="Something's wrong. Contact me at josedzirehchong@gmail.com so I can attempt to resolve the issue.")
         print(str(responseCode)[0]) #for debugging purposes
         
 class OutputArea(tk.Frame):
