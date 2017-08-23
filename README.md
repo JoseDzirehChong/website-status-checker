@@ -1,6 +1,6 @@
 # About
 
-This is a website status checker. Enter a website, and it will tell you if the website is up and running, if the domain exists but you can't access the website for some reason, or if it can't connect to the website.
+This is a website status checker. Enter a website, and it will tell you if the website is up and running, if the domain exists but you can't access the website for some reason, or if it can't connect to the website. This program is currently undeveloped enough to be considered non-functional.
 
 Created by Jose Dzireh Chong.
 
