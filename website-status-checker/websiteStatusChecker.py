@@ -7,6 +7,13 @@ Created on Tue Feb  7 16:33:24 2017
 @author: Jose Dzireh Chong
 """
 
+#TODO:
+    #Actually get this program working (debug to see what's wrong with it since I haven't worked on this in months)
+    #Fix WrappingLabels
+    
+#BUGS:
+    #Outputs come out weird and as a stream of letters
+
 import requests
 try:
     import tkinter as tk
@@ -47,17 +54,24 @@ class InputArea(tk.Frame):
             return "Failed to connect"
         
     def setValidity(self):
+        
         responseCode = self.attempt200ResponseCode()
+        
         if str(responseCode)[0] in ["2", "3"]:
             self.numericallyCorrect = WrappingLabel(self.master.outputArea, text="Website is up and running")
+            
         elif str(responseCode)[0] in ["4", "5"]:
             self.numericallyCorrect = WrappingLabel(self.master.outputArea, text="Website exists, but is either not running right now or doesn't have this subdomain")
+        
         elif responseCode == "Failed to connect":
             self.numericallyCorrect = WrappingLabel(self.master.outputArea, text="Unknown whether website works or not, could not connect to it. Check your internet connection. It's possible this website doesn't even exist.")
+            
         elif responseCode == "Please input something":
             self.numericallyCorrect = WrappingLabel(self.master.outputArea, text=responseCode)
+            
         else:
             self.numericallyCorrect = WrappingLabel(self.master.outputArea, text="Something's wrong. Contact me at josedzirehchong@gmail.com so I can attempt to resolve the issue.")
+            
         print(str(responseCode)[0]) #for debugging purposes
         
 class OutputArea(tk.Frame):
