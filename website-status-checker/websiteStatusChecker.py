@@ -9,10 +9,8 @@ Created on Tue Feb  7 16:33:24 2017
 
 #TODO:
     #Actually get this program working (debug to see what's wrong with it since I haven't worked on this in months)
-    #Fix WrappingLabels
-    
-#BUGS:
-    #Outputs come out weird and as a stream of letters
+    #Detect and clear previous output when button is pressed again
+    #Make settings page
 
 import requests
 try:
@@ -25,7 +23,7 @@ class WrappingLabel(tk.Label):
     '''a type of Label that automatically adjusts the wrap to the size'''
     def __init__(self, master=None, **kwargs):
         tk.Label.__init__(self, master, **kwargs)
-        self.bind('<Configure>', lambda e: self.config(wraplength=self.winfo_width()))
+        self.bind('<Configure>', lambda e: self.config(wraplength=master.winfo_width()))
 
 class InputArea(tk.Frame):
     def __init__(self, master=None, **kwargs):
@@ -78,7 +76,7 @@ class OutputArea(tk.Frame):
     def __init__(self, master=None, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
         
-    def displayValidity(self):
+    def displayValidity(self, event=None):
         self.master.inputArea.setValidity()
         self.master.inputArea.numericallyCorrect.pack()
         self.master.inputArea.ipInput.delete(0,tk.END)
@@ -90,8 +88,10 @@ class MainWindow(tk.Frame):
         self.outputArea = OutputArea(self)
         self.inputArea = InputArea(self)
         
-        self.inputArea.pack()
-        self.outputArea.pack()
+        self.inputArea.pack(fill=tk.X)
+        self.outputArea.pack(fill=tk.X)
+        
+        self.master.bind('<Return>', self.outputArea.displayValidity)
 
 def main():
     master = tk.Tk()
@@ -99,6 +99,7 @@ def main():
     master.geometry("400x400")
     win = MainWindow(master)
     win.pack(fill=tk.X)
+    
     master.mainloop()
 
 if __name__ == '__main__':
