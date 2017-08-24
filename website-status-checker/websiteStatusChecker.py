@@ -31,6 +31,7 @@ class InputArea(tk.Frame):
         
         self.ipPrompt = WrappingLabel(self, text="Enter website or IP address")
         self.ipInput = tk.Entry(self)
+        self.ipInput.focus()
         self.submitButton = tk.Button(self, text="Check Status", command=self.master.outputArea.displayValidity)
 
         self.ipPrompt.pack()
