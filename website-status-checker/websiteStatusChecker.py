@@ -71,14 +71,16 @@ class InputArea(tk.Frame):
         else:
             self.numericallyCorrect = WrappingLabel(self.master.outputArea, text="Something's wrong. Contact me at josedzirehchong@gmail.com so I can attempt to resolve the issue.")
             
-        print(str(responseCode)[0]) #for debugging purposes
+        print(str(responseCode)) #for debugging purposes
         
 class OutputArea(tk.Frame):
     def __init__(self, master=None, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
         
     def displayValidity(self, event=None):
+        
         self.master.inputArea.setValidity()
+        
         self.master.inputArea.numericallyCorrect.pack()
         self.master.inputArea.ipInput.delete(0,tk.END)
 
