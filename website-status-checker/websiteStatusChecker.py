@@ -37,6 +37,7 @@ class InputArea(tk.Frame):
         self.ipPrompt.pack()
         self.ipInput.pack()
         self.submitButton.pack()
+        self.numericallyCorrect = None
         
     def attempt200ResponseCode(self):
         print("program still works as of beginning attempt200ResponseCode()") #for debugging purposes
@@ -78,7 +79,8 @@ class OutputArea(tk.Frame):
         tk.Frame.__init__(self, master, **kwargs)
         
     def displayValidity(self, event=None):
-        
+        if self.master.inputArea.numericallyCorrect:
+            self.master.inputArea.numericallyCorrect.destroy()
         self.master.inputArea.setValidity()
         
         self.master.inputArea.numericallyCorrect.pack()
