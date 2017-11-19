@@ -61,7 +61,7 @@ class InputArea(tk.Frame):
             self.numericallyCorrect = "Website is up and running"
             
         elif str(responseCode)[0] in ["4", "5"]:
-            self.numericallyCorrect = "Website exists, but is either not running right now or doesn't have this subdomain"
+            self.numericallyCorrect = "Website exists, but is either not running right now, doesn't have this subdomain, or you don't have the permission to access it"
         
         elif responseCode == "Failed to connect":
             self.numericallyCorrect = "Unknown whether website works or not, could not connect to it. Check your internet connection. It's possible this website doesn't even exist."
