@@ -58,34 +58,35 @@ class InputArea(tk.Frame):
         responseCode = self.attempt200ResponseCode()
         
         if str(responseCode)[0] in ["2", "3"]:
-            self.numericallyCorrect = WrappingLabel(self.master.outputArea, text="Website is up and running")
+            self.numericallyCorrect = "Website is up and running"
             
         elif str(responseCode)[0] in ["4", "5"]:
-            self.numericallyCorrect = WrappingLabel(self.master.outputArea, text="Website exists, but is either not running right now or doesn't have this subdomain")
+            self.numericallyCorrect = "Website exists, but is either not running right now or doesn't have this subdomain"
         
         elif responseCode == "Failed to connect":
-            self.numericallyCorrect = WrappingLabel(self.master.outputArea, text="Unknown whether website works or not, could not connect to it. Check your internet connection. It's possible this website doesn't even exist.")
+            self.numericallyCorrect = "Unknown whether website works or not, could not connect to it. Check your internet connection. It's possible this website doesn't even exist."
             
         elif responseCode == "Please input something":
-            self.numericallyCorrect = WrappingLabel(self.master.outputArea, text=responseCode)
+            self.numericallyCorrect = "Please input something"
             
         else:
-            self.numericallyCorrect = WrappingLabel(self.master.outputArea, text="Something's wrong. Contact me at josedzirehchong@gmail.com so I can attempt to resolve the issue.")
+            self.numericallyCorrect = "Something's wrong. Contact me at josedzirehchong@gmail.com so I can attempt to resolve the issue."
             
         print(str(responseCode)) #for debugging purposes
         
 class OutputArea(tk.Frame):
     def __init__(self, master=None, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
+        self.output = WrappingLabel(self, text="")
+        self.output.pack()
         
     def displayValidity(self, event=None):
-        if self.master.inputArea.numericallyCorrect:
-            self.master.inputArea.numericallyCorrect.destroy()
         self.master.inputArea.setValidity()
-        
-        self.master.inputArea.numericallyCorrect.pack()
+        outputVar = tk.StringVar()
+        outputVar.set(self.master.inputArea.numericallyCorrect)
         self.master.inputArea.ipInput.delete(0,tk.END)
-
+        self.output.config(textvariable=outputVar)
+        
 class MainWindow(tk.Frame):
     def __init__(self, master=None, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
