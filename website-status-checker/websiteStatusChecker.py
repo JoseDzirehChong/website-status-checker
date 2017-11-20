@@ -8,8 +8,6 @@ Created on Tue Feb  7 16:33:24 2017
 """
 
 #TODO:
-    #Actually get this program working (debug to see what's wrong with it since I haven't worked on this in months)
-    #Detect and clear previous output when button is pressed again
     #Make settings page
 
 import requests
@@ -18,7 +16,8 @@ try:
 except ImportError:
     import Tkinter as tk
 
-#credit to novel_yet_trivial for this class
+#credit to /u/dreamer_jake for changing the way I got the response code and used it to display the output
+#credit to /u/novel_yet_trivial for this class
 class WrappingLabel(tk.Label):
     '''a type of Label that automatically adjusts the wrap to the size'''
     def __init__(self, master=None, **kwargs):
@@ -39,40 +38,18 @@ class InputArea(tk.Frame):
         self.submitButton.pack()
         self.numericallyCorrect = None
         
-    def attempt200ResponseCode(self):
-        print("program still works as of beginning attempt200ResponseCode()") #for debugging purposes
+    def check_status(self, url):
         try:
-            if len(self.ipInput.get().replace(" ", "")) == 0:
-                return "Please input something"
-            if "http://" not in self.ipInput.get().replace(" ", ""):
-                websiteToCheck = "http://" + self.ipInput.get().replace(" ", "")
-            else:
-                websiteToCheck = "http://" + self.ipInput.get().replace(" ", "")
-            r = requests.head(websiteToCheck)
-            return r.status_code
+            if str(requests.get(url).status_code)[0] in self.master.code_descriptions:
+                return self.master.code_descriptions.get(str(requests.get(url).status_code)[0], "Unknown")
         except requests.ConnectionError:
-            return "Failed to connect"
+            return "Failed to connect (unknown whether website works or not - website may possibly be non-existent), please check your url"
         
     def setValidity(self):
         
-        responseCode = self.attempt200ResponseCode()
-        
-        if str(responseCode)[0] in ["2", "3"]:
-            self.numericallyCorrect = "Website is up and running"
-            
-        elif str(responseCode)[0] in ["4", "5"]:
-            self.numericallyCorrect = "Website exists, but is either not running right now, doesn't have this subdomain, or you don't have the permission to access it"
-        
-        elif responseCode == "Failed to connect":
-            self.numericallyCorrect = "Unknown whether website works or not, could not connect to it. Check your internet connection. It's possible this website doesn't even exist."
-            
-        elif responseCode == "Please input something":
-            self.numericallyCorrect = "Please input something"
-            
-        else:
-            self.numericallyCorrect = "Something's wrong. Contact me at josedzirehchong@gmail.com so I can attempt to resolve the issue."
-            
+        responseCode = self.get_http_response_code()
         print(str(responseCode)) #for debugging purposes
+        return self.check_status(responseCode)
         
 class OutputArea(tk.Frame):
     def __init__(self, master=None, **kwargs):
@@ -81,9 +58,9 @@ class OutputArea(tk.Frame):
         self.output.pack()
         
     def displayValidity(self, event=None):
-        self.master.inputArea.setValidity()
+        output = self.master.inputArea.setValidity()
         outputVar = tk.StringVar()
-        outputVar.set(self.master.inputArea.numericallyCorrect)
+        outputVar.set(output)
         self.master.inputArea.ipInput.delete(0,tk.END)
         self.output.config(textvariable=outputVar)
         
@@ -98,6 +75,13 @@ class MainWindow(tk.Frame):
         self.outputArea.pack(fill=tk.X)
         
         self.master.bind('<Return>', self.outputArea.displayValidity)
+        
+        self.code_descriptions = {
+                '2': "Website is up and running",
+                '3': "Website is up and running",
+                '4': "Website exists, but is either not running right now, doesn't have this subdomain, or you don't have the permission to access it",
+                '5': "Website exists, but is either not running right now, doesn't have this subdomain, or you don't have the permission to access it"
+                }
 
 def main():
     master = tk.Tk()
