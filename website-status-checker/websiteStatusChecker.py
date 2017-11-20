@@ -39,6 +39,12 @@ class InputArea(tk.Frame):
         self.numericallyCorrect = None
         
     def check_status(self, url):
+        
+        url = "".join(url.split())
+        if url == "":
+            return "Please input something"
+        if "http://" not in url:
+            url = "http://" + url
         try:
             if str(requests.get(url).status_code)[0] in self.master.code_descriptions:
                 return self.master.code_descriptions.get(str(requests.get(url).status_code)[0], "Unknown")
@@ -47,9 +53,8 @@ class InputArea(tk.Frame):
         
     def setValidity(self):
         
-        responseCode = self.get_http_response_code()
-        print(str(responseCode)) #for debugging purposes
-        return self.check_status(responseCode)
+        print(self.check_status(self.ipInput.get())) #for debugging purposes
+        return self.check_status(self.ipInput.get())
         
 class OutputArea(tk.Frame):
     def __init__(self, master=None, **kwargs):
